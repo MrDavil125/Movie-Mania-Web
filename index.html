@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Movie Mania</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<style>
+body{
+background:#0b0b0b;
+color:white;
+font-family:Arial;
+text-align:center;
+}
+
+.search{
+width:85%;
+padding:12px;
+border-radius:12px;
+border:none;
+margin-top:20px;
+}
+
+.card{
+background:#111;
+margin:15px;
+padding:15px;
+border-radius:14px;
+}
+
+img{
+width:150px;
+border-radius:10px;
+}
+</style>
+
+</head>
+
+<body>
+
+<h1>🎬 Movie Mania</h1>
+
+<input id="search" class="search" placeholder="Search movie or series">
+
+<div id="results"></div>
+
+<script>
+
+const API_KEY = "YOUR_TMDB_API_KEY";
+
+document.getElementById("search").addEventListener("input", async function(){
+
+let query = this.value;
+
+if(query.length < 2) return;
+
+let res = await fetch(
+`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${query}`
+);
+
+let data = await res.json();
+
+let html = "";
+
+data.results.forEach(movie => {
+
+if(!movie.poster_path) return;
+
+let poster =
+"https://image.tmdb.org/t/p/w500" + movie.poster_path;
+
+html += `
+<div class="card">
+<img src="${poster}">
+<h3>${movie.title || movie.name}</h3>
+<p>${movie.overview || "No description"}</p>
+<button onclick="selectMovie('${movie.title || movie.name}')">
+Open in Bot
+</button>
+</div>
+`;
+
+});
+
+document.getElementById("results").innerHTML = html;
+
+});
+
+function selectMovie(movie){
+Telegram.WebApp.sendData(movie);
+Telegram.WebApp.close();
+}
+
+</script>
+
+</body>
+</html>
