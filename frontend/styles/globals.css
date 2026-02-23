@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gray-900 text-white;
+  }
+}
+
+@layer components {
+  .glass-effect {
+    @apply bg-white/10 backdrop-blur-lg border border-white/20;
+  }
+  
+  .hero-gradient {
+    @apply absolute inset-0 bg-gradient-to-r from-black via-black/70 to-transparent;
+  }
+  
+  .movie-card-hover {
+    @apply transition-all duration-300 hover:scale-105 hover:shadow-2xl;
+  }
+  
+  .gradient-text {
+    @apply bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-transparent;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-800;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gradient-to-b from-blue-500 to-purple-600 rounded-full;
+}
+
+/* Loading Animation */
+.loading-spinner {
+  @apply w-16 h-16 border-4 border-gray-700 border-t-blue-500 rounded-full animate-spin;
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
