@@ -11,6 +11,11 @@ background:#0b0b0b;
 color:white;
 font-family:Arial;
 text-align:center;
+margin:0;
+}
+
+h1{
+margin-top:20px;
 }
 
 .search{
@@ -19,6 +24,7 @@ padding:12px;
 border-radius:12px;
 border:none;
 margin-top:20px;
+outline:none;
 }
 
 .card{
@@ -32,6 +38,14 @@ img{
 width:150px;
 border-radius:10px;
 }
+
+button{
+padding:10px 15px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+margin-top:10px;
+}
 </style>
 
 </head>
@@ -40,7 +54,7 @@ border-radius:10px;
 
 <h1>🎬 Movie Mania</h1>
 
-<input id="search" class="search" placeholder="Search movie or series">
+<input id="search" class="search" placeholder="Search movie, anime, series...">
 
 <div id="results"></div>
 
@@ -48,33 +62,41 @@ border-radius:10px;
 
 const API_KEY = "0eb96b2a6bfc82baa2ee3cc572c705f7";
 
-document.getElementById("search").addEventListener("input", async function(){
+const searchInput = document.getElementById("search");
+const resultsDiv = document.getElementById("results");
 
-let query = this.value;
+searchInput.addEventListener("input", async function(){
 
-if(query.length < 2) return;
+let query = this.value.trim();
+
+if(query.length < 2){
+resultsDiv.innerHTML = "";
+return;
+}
+
+try{
 
 let res = await fetch(
-`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${query}`
+`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(query)}`
 );
 
 let data = await res.json();
 
 let html = "";
 
-data.results.forEach(movie => {
+data.results.forEach(item => {
 
-if(!movie.poster_path) return;
+if(!item.poster_path) return;
 
-let poster =
-"https://image.tmdb.org/t/p/w500" + movie.poster_path;
+let poster = "https://image.tmdb.org/t/p/w500" + item.poster_path;
+let title = item.title || item.name;
 
 html += `
 <div class="card">
 <img src="${poster}">
-<h3>${movie.title || movie.name}</h3>
-<p>${movie.overview || "No description"}</p>
-<button onclick="selectMovie('${movie.title || movie.name}')">
+<h3>${title}</h3>
+<p>${item.overview ? item.overview.substring(0,120) : "No description available"}...</p>
+<button onclick="selectMovie('${title.replace(/'/g, "")}')">
 Open in Bot
 </button>
 </div>
@@ -82,7 +104,11 @@ Open in Bot
 
 });
 
-document.getElementById("results").innerHTML = html;
+resultsDiv.innerHTML = html || "<p>No results found</p>";
+
+}catch(err){
+resultsDiv.innerHTML = "Error loading movies";
+}
 
 });
 
