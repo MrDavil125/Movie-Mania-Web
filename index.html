@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Movie Test Site</title>
+  <style>
+    body {
+      background: #111;
+      color: white;
+      font-family: Arial;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .movie-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 15px;
+    }
+
+    .movie {
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .movie img {
+      width: 100%;
+      border-radius: 8px;
+    }
+
+    .movie:hover {
+      transform: scale(1.05);
+    }
+
+    .details {
+      margin-top: 30px;
+      padding: 20px;
+      background: #222;
+      border-radius: 10px;
+    }
+
+    button {
+      padding: 10px 15px;
+      background: red;
+      border: none;
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Movie Test Platform</h1>
+
+<div class="movie-grid" id="movieGrid"></div>
+
+<div class="details" id="details"></div>
+
+<script>
+const movies = [
+  {
+    title: "KGF Chapter 1",
+    image: "https://upload.wikimedia.org/wikipedia/en/6/6e/K.G.F_Chapter_1_poster.jpg",
+    link: "https://t.me/MovieManiaProBot"
+  },
+  {
+    title: "Pushpa",
+    image: "https://upload.wikimedia.org/wikipedia/en/0/0b/Pushpa_-_The_Rise.jpg",
+    link: "https://t.me/MovieManiaProBot"
+  }
+];
+
+const grid = document.getElementById("movieGrid");
+const details = document.getElementById("details");
+
+movies.forEach(movie => {
+  const div = document.createElement("div");
+  div.className = "movie";
+  div.innerHTML = `<img src="${movie.image}"><p>${movie.title}</p>`;
+  div.onclick = () => {
+    details.innerHTML = `
+      <h2>${movie.title}</h2>
+      <img src="${movie.image}" width="200"><br><br>
+      <a href="${movie.link}" target="_blank">
+        <button>Get Movie</button>
+      </a>
+    `;
+  };
+  grid.appendChild(div);
+});
+</script>
+
+</body>
+</html>
