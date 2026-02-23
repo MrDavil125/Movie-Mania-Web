@@ -3,136 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <title>Movie Mania</title>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-
-<style>
-body{
-background:#0b0b0b;
-color:white;
-font-family:Arial;
-text-align:center;
-margin:0;
-}
-
-h1{
-margin-top:20px;
-}
-
-.search{
-width:85%;
-padding:12px;
-border-radius:12px;
-border:none;
-margin-top:20px;
-outline:none;
-font-size:16px;
-}
-
-.card{
-background:#111;
-margin:15px;
-padding:15px;
-border-radius:14px;
-box-shadow:0 0 10px rgba(0,0,0,0.5);
-}
-
-img{
-width:150px;
-border-radius:10px;
-}
-
-button{
-padding:10px 15px;
-border:none;
-border-radius:8px;
-cursor:pointer;
-margin-top:10px;
-background:#0088ff;
-color:white;
-font-weight:bold;
-}
-</style>
-
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
 <h1>🎬 Movie Mania</h1>
 
-<input id="search" class="search" placeholder="Search movie, anime, series...">
+<input id="search" placeholder="Search movies, anime, series...">
 
-<div id="results"></div>
+<div id="movies"></div>
 
-<script>
-
-const tg = window.Telegram.WebApp;
-tg.ready();
-tg.expand();
-
-const BOT_USERNAME = "MOVIEMANIAPROBOT";
-const API_KEY = "0eb96b2a6bfc82baa2ee3cc572c705f7";
-
-const searchInput = document.getElementById("search");
-const resultsDiv = document.getElementById("results");
-
-searchInput.addEventListener("input", async function(){
-
-let query = this.value.trim();
-
-if(query.length < 2){
-resultsDiv.innerHTML = "";
-return;
-}
-
-try{
-
-let res = await fetch(
-`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(query)}`
-);
-
-let data = await res.json();
-
-let html = "";
-
-data.results.forEach(item => {
-
-if(!item.poster_path) return;
-
-let poster = "https://image.tmdb.org/t/p/w500" + item.poster_path;
-let title = (item.title || item.name || "").replace(/'/g, "");
-
-html += `
-<div class="card">
-<img src="${poster}">
-<h3>${title}</h3>
-<p>${item.overview ? item.overview.substring(0,120) : "No description available"}...</p>
-<button onclick="openBot('${title}')">
-Get Movie
-</button>
-</div>
-`;
-
-});
-
-resultsDiv.innerHTML = html || "<p>No results found</p>";
-
-}catch(err){
-resultsDiv.innerHTML = "Error loading movies";
-}
-
-});
-
-function openBot(movie){
-
-let movieParam = movie.replace(/ /g,"_");
-
-let url = "https://t.me/" + BOT_USERNAME + "?start=" + movieParam;
-
-window.location.href = url;
-
-}
-
-</script>
+<script src="script.js"></script>
 
 </body>
 </html>
