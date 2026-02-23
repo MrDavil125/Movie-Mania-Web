@@ -25,6 +25,7 @@ border-radius:12px;
 border:none;
 margin-top:20px;
 outline:none;
+font-size:16px;
 }
 
 .card{
@@ -45,6 +46,9 @@ border:none;
 border-radius:8px;
 cursor:pointer;
 margin-top:10px;
+background:#0088ff;
+color:white;
+font-weight:bold;
 }
 </style>
 
@@ -59,6 +63,10 @@ margin-top:10px;
 <div id="results"></div>
 
 <script>
+
+const tg = window.Telegram.WebApp;
+tg.ready();
+tg.expand();
 
 const API_KEY = "0eb96b2a6bfc82baa2ee3cc572c705f7";
 
@@ -89,14 +97,14 @@ data.results.forEach(item => {
 if(!item.poster_path) return;
 
 let poster = "https://image.tmdb.org/t/p/w500" + item.poster_path;
-let title = item.title || item.name;
+let title = (item.title || item.name || "").replace(/'/g, "");
 
 html += `
 <div class="card">
 <img src="${poster}">
 <h3>${title}</h3>
 <p>${item.overview ? item.overview.substring(0,120) : "No description available"}...</p>
-<button onclick="selectMovie('${title.replace(/'/g, "")}')">
+<button onclick="selectMovie('${title}')">
 Open in Bot
 </button>
 </div>
@@ -113,8 +121,13 @@ resultsDiv.innerHTML = "Error loading movies";
 });
 
 function selectMovie(movie){
-Telegram.WebApp.sendData(movie);
-Telegram.WebApp.close();
+
+tg.sendData(movie);
+
+setTimeout(() => {
+tg.close();
+}, 300);
+
 }
 
 </script>
